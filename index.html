@@ -11,6 +11,22 @@
 		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
+		<!-- Background ambient music -->
+		<audio id="ambientMusic" loop preload="auto">
+			<source src="bg music.mp3" type="audio/mpeg">
+			Your browser does not support the audio element.
+		</audio>
+		
+		<!-- Music control -->
+		<div class="music-control" id="musicControl">
+			<button id="musicToggle" aria-label="Toggle music">🎵</button>
+		</div>
+		
+		<!-- Floating petals and particles -->
+		<div class="particles-container" id="particles"></div>
+		<div class="petals-container" id="petals"></div>
+		<div class="weather-effects" id="weather"></div>
+		
 		<main class="page">
 			<section class="card">
 				<p class="since">Since September 23, 2021</p>
@@ -23,6 +39,18 @@
 					<div class="counter-item counter-right">
 						<span id="flowersCount">0</span>
 						<span class="label">flowers</span>
+					</div>
+				</div>
+
+				<!-- Anniversary Countdown -->
+				<div class="anniversary-countdown" id="anniversaryCountdown">
+					<div class="countdown-item">
+						<span class="countdown-label">Next Anniversary</span>
+						<div class="countdown-timer">
+							<span id="daysToAnniversary">0</span>
+							<span class="countdown-unit">days to go</span>
+						</div>
+						<span class="anniversary-date" id="nextAnniversaryDate"></span>
 					</div>
 				</div>
 

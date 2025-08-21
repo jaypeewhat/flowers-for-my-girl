@@ -19,7 +19,12 @@
 
 * { box-sizing: border-box; }
 
-html, body { height: 100%; margin: 0; }
+html, body { 
+	height: 100%; 
+	margin: 0; 
+	overflow-x: hidden;
+	overflow-y: auto;
+}
 
 body {
 	background: var(--bg-morning);
@@ -37,7 +42,6 @@ body.night {
 	background: var(--bg-night); 
 	color: var(--text-light);
 	position: relative;
-	overflow: hidden;
 }
 
 /* Starry night effect */
@@ -71,6 +75,95 @@ body.night .page {
 	z-index: 2;
 }
 
+/* Floating Petals Animation */
+.petals-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	pointer-events: none;
+	z-index: 1;
+	overflow: hidden;
+}
+
+.petal {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	background: radial-gradient(circle, rgba(255,182,193,0.8), rgba(255,105,180,0.4));
+	border-radius: 50% 10px;
+	animation: floatDown linear infinite;
+	opacity: 0;
+}
+
+.petal:nth-child(odd) {
+	background: radial-gradient(circle, rgba(255,192,203,0.7), rgba(255,20,147,0.3));
+	animation-duration: 6s;
+}
+
+.petal:nth-child(even) {
+	background: radial-gradient(circle, rgba(255,105,180,0.6), rgba(255,69,0,0.2));
+	animation-duration: 8s;
+}
+
+/* Interactive Particles */
+.particles-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.particle {
+	position: absolute;
+	width: 4px;
+	height: 4px;
+	background: rgba(255,255,255,0.8);
+	border-radius: 50%;
+	animation: sparkle 3s ease-in-out infinite;
+}
+
+/* Weather Effects */
+.weather-effects {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	pointer-events: none;
+	z-index: 0;
+}
+
+.rain-drop {
+	position: absolute;
+	width: 2px;
+	height: 20px;
+	background: linear-gradient(to bottom, rgba(173,216,230,0.8), transparent);
+	animation: rainfall 1s linear infinite;
+}
+
+.snow-flake {
+	position: absolute;
+	width: 6px;
+	height: 6px;
+	background: rgba(255,255,255,0.9);
+	border-radius: 50%;
+	animation: snowfall 5s linear infinite;
+}
+
+.sunshine-ray {
+	position: absolute;
+	width: 200px;
+	height: 2px;
+	background: linear-gradient(90deg, transparent, rgba(255,223,0,0.3), transparent);
+	transform-origin: left center;
+	animation: sunbeam 10s ease-in-out infinite;
+}
+
 /* Main page layout */
 .page {
 	min-height: 100vh;
@@ -78,6 +171,13 @@ body.night .page {
 	align-items: center;
 	justify-content: center;
 	padding: 40px 20px;
+}
+
+@media (max-height: 800px) {
+	.page {
+		align-items: flex-start;
+		padding-top: 20px;
+	}
 }
 
 .card {
@@ -234,6 +334,19 @@ body.dawn .label, body.night .label {
 	text-shadow: 0 0 8px rgba(255,255,255,0.2);
 }
 
+/* Milestone Effects */
+body.milestone-glow .card {
+	animation: milestoneGlow 2s ease-in-out infinite;
+	border-color: rgba(255,215,0,0.5) !important;
+}
+
+body.milestone-glow .counter-item {
+	border-color: rgba(255,215,0,0.4) !important;
+	box-shadow: 
+		0 15px 30px rgba(0,0,0,0.1),
+		0 0 30px rgba(255,215,0,0.3) !important;
+}
+
 body.dawn .counter-item, body.night .counter-item {
 	background: rgba(255,255,255,0.08);
 	border-color: rgba(255,255,255,0.15);
@@ -244,6 +357,75 @@ body.dawn .counter-item:hover, body.night .counter-item:hover {
 	box-shadow: 
 		0 25px 50px rgba(0,0,0,0.25),
 		0 0 25px rgba(255,255,255,0.2);
+}
+
+/* Anniversary Countdown */
+.anniversary-countdown {
+	margin: 30px 0 50px 0;
+	animation: fadeInUp 1.2s ease-out 0.7s both;
+}
+
+.countdown-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 25px 30px;
+	backdrop-filter: blur(15px);
+	background: rgba(255,255,255,0.08);
+	border-radius: 20px;
+	border: 2px solid rgba(255,255,255,0.15);
+	box-shadow: 
+		0 15px 30px rgba(0,0,0,0.1),
+		inset 0 1px 0 rgba(255,255,255,0.1);
+	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.countdown-item:hover {
+	transform: translateY(-4px);
+	background: rgba(255,255,255,0.12);
+	box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.countdown-label {
+	font-size: 0.9rem;
+	color: var(--muted-light);
+	text-transform: uppercase;
+	letter-spacing: 0.15em;
+	font-family: 'Cormorant Garamond', serif;
+	margin-bottom: 15px;
+}
+
+.countdown-timer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.countdown-timer span:first-child {
+	font-size: 2.5rem;
+	font-weight: 300;
+	font-family: 'Playfair Display', serif;
+	background: linear-gradient(135deg, #ff6b9d 0%, #ff8e8e 50%, #ffa8a8 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	text-shadow: 0 0 15px rgba(255,107,157,0.5);
+	line-height: 1;
+}
+
+.countdown-unit {
+	font-size: 0.8rem;
+	color: var(--muted-light);
+	font-family: 'Cormorant Garamond', serif;
+	margin-top: 5px;
+}
+
+.anniversary-date {
+	font-size: 0.85rem;
+	color: var(--muted-light);
+	font-style: italic;
+	opacity: 0.8;
 }
 
 /* Bouquet container */
@@ -511,6 +693,76 @@ body.dawn .note, body.night .note {
 	100% { transform: translateX(-400px); }
 }
 
+@keyframes floatDown {
+	0% {
+		opacity: 0;
+		transform: translateY(-100px) rotate(0deg);
+	}
+	10% {
+		opacity: 1;
+	}
+	90% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(100vh) rotate(360deg);
+	}
+}
+
+@keyframes sparkle {
+	0%, 100% {
+		opacity: 0;
+		transform: scale(0.5);
+	}
+	50% {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@keyframes rainfall {
+	0% {
+		opacity: 1;
+		transform: translateY(-20px);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(100vh);
+	}
+}
+
+@keyframes snowfall {
+	0% {
+		opacity: 1;
+		transform: translateY(-10px) translateX(0px);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(100vh) translateX(50px);
+	}
+}
+
+@keyframes sunbeam {
+	0%, 100% {
+		opacity: 0.1;
+		transform: rotate(0deg);
+	}
+	50% {
+		opacity: 0.4;
+		transform: rotate(5deg);
+	}
+}
+
+@keyframes milestoneGlow {
+	0%, 100% {
+		box-shadow: 0 0 20px rgba(255,215,0,0.3);
+	}
+	50% {
+		box-shadow: 0 0 40px rgba(255,215,0,0.6);
+	}
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
 	.card {
@@ -542,5 +794,103 @@ body.dawn .note, body.night .note {
 	
 	.bouquet {
 		height: 320px;
+	}
+}
+
+/* Anniversary Countdown */
+#anniversary-section {
+	margin-top: 2rem;
+	padding: 1.5rem;
+	background: rgba(255,255,255,0.08);
+	border: 1px solid rgba(255,255,255,0.1);
+	border-radius: 20px;
+	backdrop-filter: blur(10px);
+	text-align: center;
+	opacity: 0;
+	transform: translateY(20px);
+	animation: fadeInUp 0.8s ease-out 1.2s forwards;
+}
+
+#anniversary-section h3 {
+	font-family: 'Playfair Display', serif;
+	font-size: 1.3rem;
+	color: var(--text);
+	margin-bottom: 1rem;
+}
+
+#anniversary-countdown {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+.countdown-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 0.8rem;
+	background: rgba(255,255,255,0.05);
+	border: 1px solid rgba(255,255,255,0.1);
+	border-radius: 12px;
+	backdrop-filter: blur(5px);
+	min-width: 60px;
+}
+
+.countdown-number {
+	font-family: 'Playfair Display', serif;
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: var(--accent);
+}
+
+.countdown-label {
+	font-size: 0.7rem;
+	color: var(--muted);
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	margin-top: 0.2rem;
+}
+
+/* Music Control */
+.music-control {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+}
+
+#musicToggle {
+	background: rgba(255,255,255,0.1);
+	border: 1px solid rgba(255,255,255,0.2);
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.2rem;
+	cursor: pointer;
+	backdrop-filter: blur(10px);
+	transition: all 0.3s ease;
+	color: rgba(255,255,255,0.8);
+}
+
+#musicToggle:hover {
+	background: rgba(255,255,255,0.2);
+	border-color: rgba(255,255,255,0.3);
+	transform: scale(1.05);
+}
+
+#musicToggle.playing {
+	animation: musicPulse 2s ease-in-out infinite;
+}
+
+@keyframes musicPulse {
+	0%, 100% {
+		box-shadow: 0 0 10px rgba(255,255,255,0.3);
+	}
+	50% {
+		box-shadow: 0 0 20px rgba(255,255,255,0.5);
 	}
 }
