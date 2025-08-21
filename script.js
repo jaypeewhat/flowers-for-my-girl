@@ -1,6 +1,9 @@
 // Our special start date: September 23, 2021
 const START_DATE = new Date(2021, 8, 23); // months are 0-indexed (September = 8)
 
+// Mobile detection for performance optimization
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
 // Beautiful flower collection that cycles through the days
 const FLOWERS = [
 	{ emoji: '🌹', name: 'Rose' },
@@ -268,14 +271,14 @@ function setSeasonalEffects(date, days) {
 	// Clear existing weather
 	weatherContainer.innerHTML = '';
 	
-	// Determine season and weather
+	// Determine season and weather (reduced effects for mobile)
 	if (month >= 2 && month <= 4) { // Spring
-		createFloatingPetals(15);
+		createFloatingPetals(isMobile ? 5 : 15);
 	} else if (month >= 5 && month <= 7) { // Summer
 		createSunshine();
-		createFloatingPetals(8);
+		createFloatingPetals(isMobile ? 3 : 8);
 	} else if (month >= 8 && month <= 10) { // Fall
-		createFloatingPetals(12, true); // autumn colors
+		createFloatingPetals(isMobile ? 4 : 12, true); // autumn colors
 	} else { // Winter
 		createSnowfall();
 	}
@@ -288,13 +291,18 @@ function setSeasonalEffects(date, days) {
 
 // Particle Systems
 function initializeParticles() {
-	createInteractiveParticles();
+	// Skip heavy particle effects on mobile
+	if (!isMobile) {
+		createInteractiveParticles();
+	}
 	
-	// Add click effect to flowers
+	// Add click effect to flowers (reduced on mobile)
 	const flowers = document.querySelectorAll('.stem-img');
 	flowers.forEach((flower, index) => {
 		flower.addEventListener('click', () => {
-			createHeartBurst(flower);
+			if (!isMobile) {
+				createHeartBurst(flower);
+			}
 		});
 	});
 }
@@ -302,7 +310,10 @@ function initializeParticles() {
 function createFloatingPetals(count, autumn = false) {
 	const container = document.getElementById('petals');
 	
-	for (let i = 0; i < count; i++) {
+	// Reduce particle count on mobile devices
+	const adjustedCount = isMobile ? Math.max(1, Math.floor(count / 3)) : count;
+	
+	for (let i = 0; i < adjustedCount; i++) {
 		const petal = document.createElement('div');
 		petal.className = 'petal';
 		
@@ -318,13 +329,23 @@ function createFloatingPetals(count, autumn = false) {
 		}
 		
 		container.appendChild(petal);
+		
+		// Clean up after animation to prevent memory leaks
+		setTimeout(() => {
+			if (petal && petal.parentNode) {
+				petal.remove();
+			}
+		}, isMobile ? 15000 : 10000);
 	}
 }
 
 function createSnowfall() {
 	const container = document.getElementById('weather');
 	
-	for (let i = 0; i < 50; i++) {
+	// Reduce snowflakes on mobile
+	const snowflakeCount = isMobile ? 20 : 50;
+	
+	for (let i = 0; i < snowflakeCount; i++) {
 		const snowflake = document.createElement('div');
 		snowflake.className = 'snow-flake';
 		snowflake.style.left = Math.random() * 100 + 'vw';
@@ -351,7 +372,10 @@ function createSunshine() {
 function createInteractiveParticles() {
 	const container = document.getElementById('particles');
 	
-	for (let i = 0; i < 20; i++) {
+	// Reduce interactive particles on mobile
+	const particleCount = isMobile ? 8 : 20;
+	
+	for (let i = 0; i < particleCount; i++) {
 		const particle = document.createElement('div');
 		particle.className = 'particle';
 		particle.style.left = Math.random() * 100 + 'vw';
@@ -364,7 +388,10 @@ function createInteractiveParticles() {
 function createHeartBurst(element) {
 	const rect = element.getBoundingClientRect();
 	
-	for (let i = 0; i < 6; i++) {
+	// Reduce heart particles on mobile
+	const heartCount = isMobile ? 3 : 6;
+	
+	for (let i = 0; i < heartCount; i++) {
 		const heart = document.createElement('div');
 		heart.innerHTML = '💖';
 		heart.style.position = 'fixed';
@@ -447,17 +474,25 @@ function initMusic() {
 	
 	musicToggle.addEventListener('click', toggleMusic);
 	
-	// Try to autoplay (modern browsers may block this)
-	ambientMusic.play().then(() => {
-		isPlaying = true;
-		musicToggle.classList.add('playing');
-		musicToggle.textContent = '🎵';
-	}).catch(() => {
-		// Autoplay blocked, user needs to click
+	// Skip autoplay on mobile for better performance
+	if (!isMobile) {
+		// Try to autoplay (modern browsers may block this)
+		ambientMusic.play().then(() => {
+			isPlaying = true;
+			musicToggle.classList.add('playing');
+			musicToggle.textContent = '🎵';
+		}).catch(() => {
+			// Autoplay blocked, user needs to click
+			isPlaying = false;
+			musicToggle.classList.remove('playing');
+			musicToggle.textContent = '🔇';
+		});
+	} else {
+		// On mobile, start muted for better performance
 		isPlaying = false;
 		musicToggle.classList.remove('playing');
 		musicToggle.textContent = '🔇';
-	});
+	}
 }
 
 function toggleMusic() {
